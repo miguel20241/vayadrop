@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="vayadrop_mysql" type="docker-deploy" factoryName="docker-image" server-name="Docker">
+    <deployment type="docker-image">
+      <settings>
+        <option name="imageTag" value="mysql:latest" />
+        <option name="containerName" value="vayadrop_mysql" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>
