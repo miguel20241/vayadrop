@@ -2,17 +2,17 @@ package com.vayadrop.vayadrop.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 public class Rol {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idRol;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idRol;
     private String description;
-    private LocalDateTime createdAt;
+    private Boolean isDisabled;
+    private LocalDate created;
 
     @OneToMany(mappedBy = "rol")
     private List<User> users;
@@ -20,17 +20,18 @@ public class Rol {
     public Rol() {
     }
 
-    public Rol(Long idRol, String description, LocalDateTime createdAt) {
+    public Rol(Integer idRol, String description, Boolean isDisabled, LocalDate created) {
         this.idRol = idRol;
         this.description = description;
-        this.createdAt = createdAt;
+        this.isDisabled = isDisabled;
+        this.created = created;
     }
 
-    public Long getIdRol() {
+    public Integer getIdRol() {
         return idRol;
     }
 
-    public void setIdRol(Long idRol) {
+    public void setIdRol(Integer idRol) {
         this.idRol = idRol;
     }
 
@@ -42,11 +43,19 @@ public class Rol {
         this.description = description;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Boolean getDisabled() {
+        return isDisabled;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setDisabled(Boolean disabled) {
+        isDisabled = disabled;
+    }
+
+    public LocalDate getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 }

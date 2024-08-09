@@ -11,18 +11,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idUser;
 
-    private String name;
+    private String userName;
     private String surname;
     private String email;
     private String password;
     private String address;
-    private Boolean showAddress;
-    private Boolean disabled;
-    private LocalDate createdAt;
-    private LocalDate lastUpdatedAt;
+    private Boolean isPublicAddress;
+    private String comment;
+    private Boolean isDisabled;
+    private LocalDate created;
+    private LocalDate lastUpdate;
 
-    @ManyToOne()
-    @JoinColumn(name="idRol", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "rol", nullable = false)
     private Rol rol;
 
     @OneToMany(mappedBy = "userFrom")
@@ -34,20 +35,25 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Offer> offers;
 
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorites;
+
     public User() {
     }
 
-    public User(Long idUser, String name, String surName, String email, String password, String address, Boolean showAddress, Rol rol, Boolean disabled, LocalDate createdAt, LocalDate lastUpdatedAt) {        this.idUser = idUser;
-        this.name = name;
-        this.surname = surName;
+    public User(Long idUser, String userName, String surname, String email, String password, String address, Boolean isPublicAddress, String comment, Boolean isDisabled, LocalDate created, LocalDate lastUpdate, Rol rol) {
+        this.idUser = idUser;
+        this.userName = userName;
+        this.surname = surname;
         this.email = email;
         this.password = password;
         this.address = address;
-        this.showAddress = showAddress;
+        this.isPublicAddress = isPublicAddress;
+        this.comment = comment;
+        this.isDisabled = isDisabled;
+        this.created = created;
+        this.lastUpdate = lastUpdate;
         this.rol = rol;
-        this.disabled = disabled;
-        this.createdAt = createdAt;
-        this.lastUpdatedAt = lastUpdatedAt;
     }
 
     public Long getIdUser() {
@@ -58,12 +64,12 @@ public class User {
         this.idUser = idUser;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getSurname() {
@@ -98,12 +104,44 @@ public class User {
         this.address = address;
     }
 
-    public Boolean getShowAddress() {
-        return showAddress;
+    public Boolean getPublicAddress() {
+        return isPublicAddress;
     }
 
-    public void setShowAddress(Boolean showAddress) {
-        this.showAddress = showAddress;
+    public void setPublicAddress(Boolean publicAddress) {
+        isPublicAddress = publicAddress;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Boolean getDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        isDisabled = disabled;
+    }
+
+    public LocalDate getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDate created) {
+        this.created = created;
+    }
+
+    public LocalDate getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(LocalDate lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public Rol getRol() {
@@ -112,29 +150,5 @@ public class User {
 
     public void setRol(Rol rol) {
         this.rol = rol;
-    }
-
-    public Boolean getDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
-    }
-
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDate getLastUpdatedAt() {
-        return lastUpdatedAt;
-    }
-
-    public void setLastUpdatedAt(LocalDate lastUpdatedAt) {
-        this.lastUpdatedAt = lastUpdatedAt;
     }
 }

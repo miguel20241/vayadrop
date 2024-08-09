@@ -2,18 +2,18 @@ package com.vayadrop.vayadrop.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idCategory;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idCategory;
 
     private String description;
-    private Boolean disabled;
-    private LocalDateTime createdAt;
+    private Boolean isDisabled;
+    private LocalDate created;
 
     @OneToMany(mappedBy = "category")
     private List<OffersCategory> offersCategories;
@@ -21,19 +21,19 @@ public class Category {
     public Category() {
     }
 
-    public Category(Long idCategory, String description, Boolean disabled, LocalDateTime createdAt, List<OffersCategory> offersCategories) {
+    public Category(Integer idCategory, String description, Boolean isDisabled, LocalDate created, List<OffersCategory> offersCategories) {
         this.idCategory = idCategory;
         this.description = description;
-        this.disabled = disabled;
-        this.createdAt = createdAt;
+        this.isDisabled = isDisabled;
+        this.created = created;
         this.offersCategories = offersCategories;
     }
 
-    public Long getIdCategory() {
+    public Integer getIdCategory() {
         return idCategory;
     }
 
-    public void setIdCategory(Long idCategory) {
+    public void setIdCategory(Integer idCategory) {
         this.idCategory = idCategory;
     }
 
@@ -46,26 +46,18 @@ public class Category {
     }
 
     public Boolean getDisabled() {
-        return disabled;
+        return isDisabled;
     }
 
     public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+        isDisabled = disabled;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDate getCreated() {
+        return created;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public List<OffersCategory> getOffersCategories() {
-        return offersCategories;
-    }
-
-    public void setOffersCategories(List<OffersCategory> offersCategories) {
-        this.offersCategories = offersCategories;
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 }

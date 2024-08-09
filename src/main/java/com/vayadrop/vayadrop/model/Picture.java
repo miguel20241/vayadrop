@@ -7,12 +7,12 @@ import java.time.LocalDate;
 @Entity
 public class Picture {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idPicture;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idPicture;
 
     private String href;
-    private Boolean disabled;
-    private LocalDate createdAt;
+    private Boolean isDisabled;
+    private LocalDate created;
 
     @ManyToOne
     @JoinColumn(name = "idOffer", nullable = false)
@@ -21,19 +21,19 @@ public class Picture {
     public Picture() {
     }
 
-    public Picture(Long idPicture, String href, Boolean disabled, LocalDate createdAt, Offer offer) {
+    public Picture(Integer idPicture, String href, Boolean isDisabled, LocalDate created, Offer offer) {
         this.idPicture = idPicture;
         this.href = href;
-        this.disabled = disabled;
-        this.createdAt = createdAt;
+        this.isDisabled = isDisabled;
+        this.created = created;
         this.offer = offer;
     }
 
-    public Long getIdPicture() {
+    public Integer getIdPicture() {
         return idPicture;
     }
 
-    public void setIdPicture(Long idPicture) {
+    public void setIdPicture(Integer idPicture) {
         this.idPicture = idPicture;
     }
 
@@ -46,19 +46,19 @@ public class Picture {
     }
 
     public Boolean getDisabled() {
-        return disabled;
+        return isDisabled;
     }
 
     public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+        isDisabled = disabled;
     }
 
-    public LocalDate getCreatedAt() {
-        return createdAt;
+    public LocalDate getCreated() {
+        return created;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 
     public Offer getOffer() {

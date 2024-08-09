@@ -1,26 +1,26 @@
 package com.vayadrop.vayadrop.model;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 public class Offer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idOffer;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idOffer;
     private String refNumber;
     private String description;
     private String mainPicture;
-    private Boolean active;
-    private Boolean disabled;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Boolean isActive;
+    private Boolean isDisabled;
+    private LocalDate created;
+    private LocalDate lastUpdated;
+
+    @ManyToOne
+    @JoinColumn(name = "idUser", nullable = false)
+    private User user;
 
     @OneToMany(mappedBy = "offer")
     private List<Message> messages;
@@ -28,42 +28,32 @@ public class Offer {
     @OneToMany(mappedBy = "offer")
     private List<Picture> pictures;
 
-    @ManyToOne
-    @JoinColumn(name = "idUser", nullable = false)
-    private User user;
-
     @OneToMany(mappedBy = "offer")
     private List<OffersCategory> offersCategories;
 
-    /*@ManyToMany
-    @JoinTable(name = "offersCategory",
-            joinColumns = @JoinColumn(name = "idOffer"),
-            inverseJoinColumns = @JoinColumn(name = "categoryId"))
-    private List<Category> categories;*/
+    @OneToMany(mappedBy = "offer")
+    private List<Favorite> favorites;
 
     public Offer() {
     }
 
-    public Offer(Long idOffer, String refNumber, String description, String mainPicture, Boolean active, Boolean disabled, LocalDateTime createdAt, LocalDateTime updatedAt, List<Message> messages, List<Picture> pictures, User user, List<OffersCategory> offersCategories) {
+    public Offer(Integer idOffer, String refNumber, String description, String mainPicture, Boolean isActive, Boolean isDisabled, LocalDate created, LocalDate lastUpdated, User user) {
         this.idOffer = idOffer;
         this.refNumber = refNumber;
         this.description = description;
         this.mainPicture = mainPicture;
-        this.active = active;
-        this.disabled = disabled;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.messages = messages;
-        this.pictures = pictures;
+        this.isActive = isActive;
+        this.isDisabled = isDisabled;
+        this.created = created;
+        this.lastUpdated = lastUpdated;
         this.user = user;
-        this.offersCategories = offersCategories;
     }
 
-    public Long getIdOffer() {
+    public Integer getIdOffer() {
         return idOffer;
     }
 
-    public void setIdOffer(Long idOffer) {
+    public void setIdOffer(Integer idOffer) {
         this.idOffer = idOffer;
     }
 
@@ -92,51 +82,35 @@ public class Offer {
     }
 
     public Boolean getActive() {
-        return active;
+        return isActive;
     }
 
     public void setActive(Boolean active) {
-        this.active = active;
+        isActive = active;
     }
 
     public Boolean getDisabled() {
-        return disabled;
+        return isDisabled;
     }
 
     public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+        isDisabled = disabled;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDate getCreated() {
+        return created;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDate getLastUpdated() {
+        return lastUpdated;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    public List<Picture> getPictures() {
-        return pictures;
-    }
-
-    public void setPictures(List<Picture> pictures) {
-        this.pictures = pictures;
+    public void setLastUpdated(LocalDate lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public User getUser() {
@@ -145,13 +119,5 @@ public class Offer {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<OffersCategory> getOffersCategories() {
-        return offersCategories;
-    }
-
-    public void setOffersCategories(List<OffersCategory> offersCategories) {
-        this.offersCategories = offersCategories;
     }
 }
