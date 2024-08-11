@@ -7,23 +7,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "roles")
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCategory;
-
-    private String description;
-    private Boolean isDisabled;
+    private Integer idRol;
+    private String name;
     private LocalDate created;
 
-    @OneToMany(mappedBy = "category")
-    private List<OffersCategory> offersCategories;
 }

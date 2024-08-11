@@ -1,19 +1,33 @@
 package com.vayadrop.vayadrop.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.time.LocalDate;
+import java.util.Set;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idUser;
 
-    private String userName;
-    private String surname;
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
     private String address;
     private Boolean isPublicAddress;
@@ -22,9 +36,12 @@ public class User {
     private LocalDate created;
     private LocalDate lastUpdate;
 
-    @ManyToOne
-    @JoinColumn(name = "rol", nullable = false)
-    private Rol rol;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "idUser"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "idRol")
+    )
+    private Set<Role> role;
 
     @OneToMany(mappedBy = "userFrom")
     private List<Message> sentMessages;
@@ -38,117 +55,4 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Favorite> favorites;
 
-    public User() {
-    }
-
-    public User(Long idUser, String userName, String surname, String email, String password, String address, Boolean isPublicAddress, String comment, Boolean isDisabled, LocalDate created, LocalDate lastUpdate, Rol rol) {
-        this.idUser = idUser;
-        this.userName = userName;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
-        this.address = address;
-        this.isPublicAddress = isPublicAddress;
-        this.comment = comment;
-        this.isDisabled = isDisabled;
-        this.created = created;
-        this.lastUpdate = lastUpdate;
-        this.rol = rol;
-    }
-
-    public Long getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Boolean getPublicAddress() {
-        return isPublicAddress;
-    }
-
-    public void setPublicAddress(Boolean publicAddress) {
-        isPublicAddress = publicAddress;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Boolean getDisabled() {
-        return isDisabled;
-    }
-
-    public void setDisabled(Boolean disabled) {
-        isDisabled = disabled;
-    }
-
-    public LocalDate getCreated() {
-        return created;
-    }
-
-    public void setCreated(LocalDate created) {
-        this.created = created;
-    }
-
-    public LocalDate getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(LocalDate lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
-    }
 }
