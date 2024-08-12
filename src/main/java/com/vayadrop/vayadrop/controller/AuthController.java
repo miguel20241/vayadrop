@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/vayadrop/api/auth")
 public class AuthController {
 
     @Autowired

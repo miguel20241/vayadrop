@@ -29,10 +29,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenBlackListService tokenBlackListService;
 
+    private final JwtHelpers jwtHelpers;
+
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, TokenBlackListService tokenBlackListService, JwtHelpers jwtHelpers) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
         this.tokenBlackListService = tokenBlackListService;
+        this.jwtHelpers = jwtHelpers;
     }
 
     @Override
