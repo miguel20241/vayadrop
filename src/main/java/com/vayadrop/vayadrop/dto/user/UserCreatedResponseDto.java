@@ -1,4 +1,4 @@
-package com.vayadrop.vayadrop.dto;
+package com.vayadrop.vayadrop.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreatedResponseDto {
+public class UserCreatedResponseDto implements BaseUserDto{
     private Long idUser;
     private String username;
     private String email;

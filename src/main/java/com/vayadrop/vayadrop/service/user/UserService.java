@@ -1,6 +1,8 @@
-package com.vayadrop.vayadrop.service;
+package com.vayadrop.vayadrop.service.user;
 
-import com.vayadrop.vayadrop.dto.UserCreatedResponseDto;
+import com.vayadrop.vayadrop.dto.user.UserCreatedResponseDto;
+import com.vayadrop.vayadrop.dto.user.UserDtoMappers;
+import com.vayadrop.vayadrop.dto.user.UserGetResponseDto;
 import com.vayadrop.vayadrop.model.Role;
 import com.vayadrop.vayadrop.model.User;
 import com.vayadrop.vayadrop.repository.RoleRepository;
@@ -14,11 +16,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -28,17 +29,19 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
+    private final UserConverterToDtoService userConverterToDtoService;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService, UserConverterToDtoService userConverterToDtoService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
+        this.userConverterToDtoService = userConverterToDtoService;
     }
 
-    public User createUser(User user) {
+    public UserCreatedResponseDto createUser(User user) {
 
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("Username is already taken!");
@@ -60,18 +63,11 @@ public class UserService {
             throw new RuntimeException("User role not found");
         }
 
-        return userRepository.save(user);
-    }
+        User userCreated = userRepository.save(user);
 
-    public UserCreatedResponseDto convertToDto(User user) {
+        String token = authenticateNewUser(userCreated);
 
-        Set<String> roles = user.getRole().stream()
-                .map(Role::getName)
-                .collect(Collectors.toSet());
-
-        String token = authenticateNewUser(user);
-
-        return new UserCreatedResponseDto(user.getIdUser(), user.getUsername(), user.getEmail(), roles, token);
+        return userConverterToDtoService.convertToDto(userCreated, UserDtoMappers.toUserCreatedResponseDto(token));
     }
 
     public String authenticateNewUser(User user) {
@@ -84,4 +80,15 @@ public class UserService {
 
         return jwtTokenProvider.generateToken(authenticationToken);
     }
+
+    public UserGetResponseDto getUserByIdAndEmail(Long idUser, Principal principal) {
+        User user = userRepository.findByIdUserAndEmail(idUser, principal.getName()).orElse(null);
+
+        if (user != null) {
+            return userConverterToDtoService.convertToDto(user, UserDtoMappers.toUserGetResponseDto());
+        }
+        return null;
+    }
+
+
 }
