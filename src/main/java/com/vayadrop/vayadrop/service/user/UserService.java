@@ -84,7 +84,7 @@ public class UserService {
 
     // Get data of user by id
     public UserGetResponseDto getUserByIdAndEmail(Long idUser, Principal principal) {
-        User user = userRepository.findByIdUserAndEmail(idUser, principal.getName()).orElse(null);
+        User user = userRepository.findByIdUserAndEmailAndIsDisabledFalse(idUser, principal.getName()).orElse(null);
 
         if (user != null) {
             return userConverterToDtoService.convertToDto(user, UserDtoMappers.toUserGetResponseDto());
@@ -94,7 +94,7 @@ public class UserService {
 
     // Update user
     public UserUpdateResponseDto updateUserById(Long idUser, UserUpdateRequestDto userUpdateRequestDto, Principal principal) {
-        User user = userRepository.findByIdUserAndEmail(idUser, principal.getName()).orElse(null);
+        User user = userRepository.findByIdUserAndEmailAndIsDisabledFalse(idUser, principal.getName()).orElse(null);
 
         if (user == null) {
             return null;
@@ -108,5 +108,16 @@ public class UserService {
         return userConverterToDtoService.convertToDto(user, UserDtoMappers.toUserCreatedResponseDto());
     }
 
+    public Boolean deleteUserById(Long idUser, Principal principal) {
+        User user = userRepository.findByIdUserAndEmailAndIsDisabledFalse(idUser, principal.getName()).orElse((null));
 
+        if (user != null) {
+            user.setDisabled(true);
+            userRepository.save(user);
+
+            return true;
+        }
+
+        return false;
+    }
 }
