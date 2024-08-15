@@ -1,7 +1,9 @@
 package com.vayadrop.vayadrop.controller;
 
-import com.vayadrop.vayadrop.dto.user.UserCreatedResponseDto;
+import com.vayadrop.vayadrop.dto.user.UserCreateResponseDto;
 import com.vayadrop.vayadrop.dto.user.UserGetResponseDto;
+import com.vayadrop.vayadrop.dto.user.UserUpdateRequestDto;
+import com.vayadrop.vayadrop.dto.user.UserUpdateResponseDto;
 import com.vayadrop.vayadrop.model.User;
 import com.vayadrop.vayadrop.service.user.UserService;
 import com.vayadrop.vayadrop.repository.UserRepository;
@@ -27,15 +29,15 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    private ResponseEntity<UserCreatedResponseDto> postUser(@Valid @RequestBody User newUser, UriComponentsBuilder ucb) {
-        UserCreatedResponseDto userCreatedResponseDto = userService.createUser(newUser);
+    private ResponseEntity<UserCreateResponseDto> postUser(@Valid @RequestBody User newUser, UriComponentsBuilder uriBuilder) {
+        UserCreateResponseDto userCreateResponseDto = userService.createUser(newUser);
 
-        URI locationOfNewUser = ucb
+        URI locationOfNewUser = uriBuilder
                 .path("vayadrop/user/{id}")
-                .buildAndExpand(userCreatedResponseDto.getIdUser())
+                .buildAndExpand(userCreateResponseDto.getIdUser())
                 .toUri();
 
-        return ResponseEntity.created(locationOfNewUser).body(userCreatedResponseDto);
+        return ResponseEntity.created(locationOfNewUser).body(userCreateResponseDto);
     }
 
     @GetMapping("/{idUser}")
@@ -49,4 +51,14 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    @PutMapping("/{idUser}")
+    private ResponseEntity<UserUpdateResponseDto> updateUserById(@PathVariable Long idUser, @RequestBody UserUpdateRequestDto userUpdate, Principal principal) {
+        UserUpdateResponseDto userUpdateResponseDto = userService.updateUserById(idUser, userUpdate, principal);
+
+        if (userUpdateResponseDto != null) {
+            return ResponseEntity.ok().body(userUpdateResponseDto);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
 }

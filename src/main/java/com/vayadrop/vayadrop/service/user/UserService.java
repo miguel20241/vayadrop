@@ -1,13 +1,13 @@
 package com.vayadrop.vayadrop.service.user;
 
-import com.vayadrop.vayadrop.dto.user.UserCreatedResponseDto;
-import com.vayadrop.vayadrop.dto.user.UserDtoMappers;
-import com.vayadrop.vayadrop.dto.user.UserGetResponseDto;
+import com.vayadrop.vayadrop.dto.user.*;
+import com.vayadrop.vayadrop.helper.EntityHelper;
 import com.vayadrop.vayadrop.model.Role;
 import com.vayadrop.vayadrop.model.User;
 import com.vayadrop.vayadrop.repository.RoleRepository;
 import com.vayadrop.vayadrop.repository.UserRepository;
 import com.vayadrop.vayadrop.security.JwtTokenProvider;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,7 +41,8 @@ public class UserService {
         this.userConverterToDtoService = userConverterToDtoService;
     }
 
-    public UserCreatedResponseDto createUser(User user) {
+    // Create new user
+    public UserCreateResponseDto createUser(User user) {
 
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("Username is already taken!");
@@ -81,6 +82,7 @@ public class UserService {
         return jwtTokenProvider.generateToken(authenticationToken);
     }
 
+    // Get data of user by id
     public UserGetResponseDto getUserByIdAndEmail(Long idUser, Principal principal) {
         User user = userRepository.findByIdUserAndEmail(idUser, principal.getName()).orElse(null);
 
@@ -88,6 +90,22 @@ public class UserService {
             return userConverterToDtoService.convertToDto(user, UserDtoMappers.toUserGetResponseDto());
         }
         return null;
+    }
+
+    // Update user
+    public UserUpdateResponseDto updateUserById(Long idUser, UserUpdateRequestDto userUpdateRequestDto, Principal principal) {
+        User user = userRepository.findByIdUserAndEmail(idUser, principal.getName()).orElse(null);
+
+        if (user == null) {
+            return null;
+        }
+        BeanUtils.copyProperties(userUpdateRequestDto, user, EntityHelper.getNullPropertyNames(userUpdateRequestDto));
+
+        user.setLastUpdate(LocalDate.now());
+
+        userRepository.save(user);
+
+        return userConverterToDtoService.convertToDto(user, UserDtoMappers.toUserCreatedResponseDto());
     }
 
 

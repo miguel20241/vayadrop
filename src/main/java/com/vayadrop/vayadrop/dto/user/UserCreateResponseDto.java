@@ -11,10 +11,11 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreatedResponseDto implements BaseUserDto{
+public class UserCreateResponseDto implements BaseUserDto{
     private Long idUser;
     private String username;
     private String email;
+    private Boolean isPublicAddress;
     private Set<String> role;
     private String token;
 }

@@ -9,17 +9,21 @@ import java.util.stream.Collectors;
 
 // Mapeador de dtos para User. Crear un método para cada dto necesario
 public class UserDtoMappers {
-    public static Function<User, UserCreatedResponseDto> toUserCreatedResponseDto(String token) {
+    public static Function<User, UserCreateResponseDto> toUserCreatedResponseDto(String token) {
         return user -> {
             Set<String> roles = user.getRole().stream()
                     .map(Role::getName)
                     .collect(Collectors.toSet());
 
-            return new UserCreatedResponseDto(user.getIdUser(), user.getUsername(), user.getEmail(), roles, token);
+            return new UserCreateResponseDto(user.getIdUser(), user.getUsername(), user.getEmail(), user.getPublicAddress(), roles, token);
         };
     }
 
     public static Function<User, UserGetResponseDto> toUserGetResponseDto() {
         return user -> new UserGetResponseDto(user);
+    }
+
+    public static Function<User, UserUpdateResponseDto> toUserCreatedResponseDto() {
+        return user -> new UserUpdateResponseDto(user);
     }
 }
