@@ -86,19 +86,17 @@ public class UserService {
     public UserGetResponseDto getUserByIdAndEmail(Long idUser, Principal principal) {
         User user = userRepository.findByIdUserAndEmailAndIsDisabledFalse(idUser, principal.getName()).orElse(null);
 
-        if (user != null) {
-            return userConverterToDtoService.convertToDto(user, UserDtoMappers.toUserGetResponseDto());
-        }
-        return null;
+        if (user == null) return null;
+
+        return userConverterToDtoService.convertToDto(user, UserDtoMappers.toUserGetResponseDto());
     }
 
     // Update user
     public UserUpdateResponseDto updateUserById(Long idUser, UserUpdateRequestDto userUpdateRequestDto, Principal principal) {
         User user = userRepository.findByIdUserAndEmailAndIsDisabledFalse(idUser, principal.getName()).orElse(null);
 
-        if (user == null) {
-            return null;
-        }
+        if (user == null) return null;
+
         BeanUtils.copyProperties(userUpdateRequestDto, user, EntityHelper.getNullPropertyNames(userUpdateRequestDto));
 
         user.setLastUpdate(LocalDate.now());
@@ -111,13 +109,19 @@ public class UserService {
     public Boolean deleteUserById(Long idUser, Principal principal) {
         User user = userRepository.findByIdUserAndEmailAndIsDisabledFalse(idUser, principal.getName()).orElse((null));
 
-        if (user != null) {
-            user.setDisabled(true);
-            userRepository.save(user);
+        if (user == null) return false;
 
-            return true;
-        }
+        user.setDisabled(true);
+        userRepository.save(user);
 
-        return false;
+        return true;
+    }
+
+    public UserGetPublicProfileResponseDto getUserPublicProfileById(Long idUser) {
+        User user = userRepository.findByIdUserAndIsDisabledFalse(idUser).orElse(null);
+
+        if (user == null) return null;
+
+        return userConverterToDtoService.convertToDto(user, UserDtoMappers.toUserGetPublicProfileResponseDto());
     }
 }

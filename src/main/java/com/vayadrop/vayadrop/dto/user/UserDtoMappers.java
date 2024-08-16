@@ -26,4 +26,8 @@ public class UserDtoMappers {
     public static Function<User, UserUpdateResponseDto> toUserCreatedResponseDto() {
         return user -> new UserUpdateResponseDto(user);
     }
+
+    public static Function<User, UserGetPublicProfileResponseDto> toUserGetPublicProfileResponseDto() {
+        return user -> new UserGetPublicProfileResponseDto(user);
+    }
 }

@@ -1,9 +1,6 @@
 package com.vayadrop.vayadrop.controller;
 
-import com.vayadrop.vayadrop.dto.user.UserCreateResponseDto;
-import com.vayadrop.vayadrop.dto.user.UserGetResponseDto;
-import com.vayadrop.vayadrop.dto.user.UserUpdateRequestDto;
-import com.vayadrop.vayadrop.dto.user.UserUpdateResponseDto;
+import com.vayadrop.vayadrop.dto.user.*;
 import com.vayadrop.vayadrop.model.User;
 import com.vayadrop.vayadrop.service.user.UserService;
 import com.vayadrop.vayadrop.repository.UserRepository;
@@ -68,6 +65,17 @@ public class UserController {
 
         if (isDeletedUser) {
             return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/public/{idUser}")
+    private ResponseEntity<UserGetPublicProfileResponseDto> getUserPublicProfileById(@PathVariable Long idUser) {
+        UserGetPublicProfileResponseDto userGetPublicProfileResponseDto = userService.getUserPublicProfileById(idUser);
+
+        if (userGetPublicProfileResponseDto != null) {
+            return ResponseEntity.ok().body(userGetPublicProfileResponseDto);
         }
 
         return ResponseEntity.notFound().build();
